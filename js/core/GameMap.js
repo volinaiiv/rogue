@@ -13,6 +13,7 @@
         this.rooms = [];
         this.items = [];
         this.player = null;
+        this.enemies = [];
     }
 
     GameMap.prototype.init = function () {
@@ -28,6 +29,7 @@
         this.rooms = [];
         this.items = [];
         this.player = null;
+        this.enemies = [];
     };
 
     GameMap.prototype.inBounds = function (x, y) {
@@ -43,6 +45,20 @@
             if (this.items[i].x === x && this.items[i].y === y) return this.items[i];
         }
         return null;
+    };
+
+    GameMap.prototype.enemyAt = function (x, y) {
+        for (let i = 0; i < this.enemies.length; i++) {
+            if (this.enemies[i].x === x && this.enemies[i].y === y) return this.enemies[i];
+        }
+        return null;
+    };
+
+    GameMap.prototype.isOccupied = function (x, y) {
+        return (this.itemAt(x, y) ||
+            this.enemyAt(x, y) ||
+            (this.player && this.player.x === x && this.player.y === y)
+        );
     };
 
     GameMap.prototype.carveRect = function (x, y, w, h) {
@@ -62,7 +78,7 @@
             const idx = (start + step) % total;
             const x = idx % this.width;
             const y = Math.floor(idx / this.width);
-            if (this.isFloor(x, y) && !this.itemAt(x, y)) {
+            if (this.isFloor(x, y) && !this.isOccupied(x, y)) {
                 return { x, y };
             }
         }
@@ -140,12 +156,23 @@
         }
     };
 
+    GameMap.prototype.placeEnemies = function () {
+        this.enemies = [];
+        const count = cfg.enemies;
+        for (let i = 0; i < count; i++) {
+            const cell = this.findEmptyFloorCell();
+            if (!cell) break;
+            this.enemies.push(new Enemy(cell.x, cell.y));
+        }
+    };
+
     GameMap.prototype.generate = function () {
         this.init();
         this.placeCorridors();
         this.placeRooms();
         this.placeItems();
         this.placePlayer();
+        this.placeEnemies();
     };
 
     root.GameMap = GameMap;

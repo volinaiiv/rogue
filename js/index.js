@@ -20,6 +20,7 @@
             'js/enums/PropType.js',
             'js/entities/Prop.js',
             "js/entities/Player.js",
+            "js/entities/Enemy.js",
             'js/utils/utils.js',
             'js/core/GameMap.js',
             'js/core/Game.js'

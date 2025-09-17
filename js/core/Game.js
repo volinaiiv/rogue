@@ -75,6 +75,7 @@
 
         this.renderGridLayer((x, y) => this.map.tiles[y][x].getCssClass());
         this.renderSpriteLayer(this.map.items);
+        this.renderSpriteLayer(this.map.enemies);
         if (this.map.player) {
             this.renderSpriteLayer([this.map.player]);
         }
