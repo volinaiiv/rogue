@@ -156,7 +156,7 @@
     GameMap.prototype.placePlayer = function () {
         const cell = this.findEmptyFloorCell();
         if (cell) {
-            this.player = new Player(cell.x, cell.y, cfg.player.maxHealth);
+            this.player = new Player(cell.x, cell.y, cfg.player.maxHealth, cfg.player.attackDamage);
         }
     };
 
@@ -166,7 +166,7 @@
         for (let i = 0; i < count; i++) {
             const cell = this.findEmptyFloorCell();
             if (!cell) break;
-            this.enemies.push(new Enemy(cell.x, cell.y, cfg.enemy.maxHealth));
+            this.enemies.push(new Enemy(cell.x, cell.y, cfg.enemy.maxHealth, cfg.enemy.attackDamage));
         }
     };
 
@@ -179,6 +179,15 @@
             }
         }
         return removed;
+    };
+
+    GameMap.prototype.removeItemAt = function (x, y) {
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].x === x && this.items[i].y === y) {
+                return this.items.splice(i, 1)[0];
+            }
+        }
+        return null;
     };
 
     GameMap.prototype.generate = function () {

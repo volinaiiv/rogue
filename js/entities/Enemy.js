@@ -1,23 +1,29 @@
 (function (root) {
     "use strict";
 
-    function Enemy(x, y, maxHealth) {
+    function Enemy(x, y, maxHealth, damage) {
         this.x = x;
         this.y = y;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.attackDamage = damage;
     }
 
     Enemy.prototype.getCssClass = function () {
         return "tileE";
     };
 
-    Enemy.prototype.tryAttack = function (map, damage) {
+    Enemy.prototype.takeDamage = function (amount) {
+        this.health = Math.max(0, this.health - amount);
+        return this.health;
+    };
+
+    Enemy.prototype.tryAttack = function (map) {
         if (!map.player) return false;
         const dx = Math.abs(this.x - map.player.x);
         const dy = Math.abs(this.y - map.player.y);
         if (dx + dy === 1) {
-            map.player.takeDamage(damage);
+            map.player.takeDamage(this.attackDamage);
             return true;
         }
         return false;

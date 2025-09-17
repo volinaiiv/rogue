@@ -81,10 +81,10 @@
     Game.prototype.enemiesAct = function () {
         for (let i = 0; i < this.map.enemies.length; i++) {
             const e = this.map.enemies[i];
-            const hitBefore = e.tryAttack(this.map, cfg.enemy.attackDamage);
+            const hitBefore = e.tryAttack(this.map);
             if (!hitBefore) {
                 e.tryMoveRandom(this.map);
-                e.tryAttack(this.map, cfg.enemy.attackDamage);
+                e.tryAttack(this.map);
             }
         }
     };

@@ -18,14 +18,16 @@
         items: {
             swords: 2, // мечи
             potions: 10, // зелья
+            potionHeal: 30
         },
         enemies: 10, // количество врагов
         player: {
-            maxHealth: 100
+            maxHealth: 100,
+            attackDamage: 10,
         },
         enemy: {
             maxHealth: 100,
-            attackDamage: 10
+            attackDamage: 10,
         }
     };
 })(window);

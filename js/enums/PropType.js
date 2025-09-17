@@ -8,10 +8,12 @@
             css: 'tile'
         },
         sword:  {
-            css: 'tileSW'
+            css: 'tileSW',
+            attackBonus: 10,
         },
         potion: {
-            css: 'tileHP'
+            css: 'tileHP',
+            heal: 30
         },
     };
 })(window);
