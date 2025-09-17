@@ -11,6 +11,7 @@
         this.height = height;
         this.tiles = [];
         this.rooms = [];
+        this.items = [];
     }
 
     GameMap.prototype.init = function () {
@@ -24,10 +25,22 @@
         }
 
         this.rooms = [];
+        this.items = [];
     };
 
     GameMap.prototype.inBounds = function (x, y) {
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
+    };
+
+    GameMap.prototype.isFloor = function (x, y) {
+        return this.inBounds(x, y) && this.tiles[y][x].type === PropType.floor;
+    };
+
+    GameMap.prototype.itemAt = function (x, y) {
+        for (let i = 0; i < this.items.length; i++) {
+            if (this.items[i].x === x && this.items[i].y === y) return this.items[i];
+        }
+        return null;
     };
 
     GameMap.prototype.carveRect = function (x, y, w, h) {
@@ -40,9 +53,23 @@
         }
     };
 
+    GameMap.prototype.findEmptyFloorCell = function () {
+        const total = this.width * this.height;
+        const start = randomInt(0, total - 1);
+        for (let step = 0; step < total; step++) {
+            const idx = (start + step) % total;
+            const x = idx % this.width;
+            const y = Math.floor(idx / this.width);
+            if (this.isFloor(x, y) && !this.itemAt(x, y)) {
+                return { x, y };
+            }
+        }
+        return null;
+    };
+
     GameMap.prototype.placeCorridors = function () {
-        const hCount = randomInt(cfg.corridor.horizontalMin, cfg.corridor.horizontalMax);
-        const vCount = randomInt(cfg.corridor.verticalMin, cfg.corridor.verticalMax);
+        const hCount = randomInt(cfg.corridors.horizontalMin, cfg.corridors.horizontalMax);
+        const vCount = randomInt(cfg.corridors.verticalMin, cfg.corridors.verticalMax);
 
         const rows = pickDistinctInts(hCount, 0, this.height - 1);
         const cols = pickDistinctInts(vCount, 0, this.width - 1);
@@ -90,10 +117,25 @@
         }
     };
 
+    GameMap.prototype.placeItems = function () {
+        for (let i = 0; i < cfg.items.swords; i++) {
+            const cell = this.findEmptyFloorCell();
+            if (!cell) break;
+            this.items.push(new Prop(PropType.sword, cell.x, cell.y));
+        }
+
+        for (let i = 0; i < cfg.items.potions; i++) {
+            const cell = this.findEmptyFloorCell();
+            if (!cell) break;
+            this.items.push(new Prop(PropType.potion, cell.x, cell.y));
+        }
+    };
+
     GameMap.prototype.generate = function () {
         this.init();
         this.placeCorridors();
         this.placeRooms();
+        this.placeItems();
     };
 
     root.GameMap = GameMap;

@@ -6,6 +6,12 @@
         },
         floor: {
             css: 'tile'
-        }
+        },
+        sword:  {
+            css: 'tileSW'
+        },
+        potion: {
+            css: 'tileHP'
+        },
     };
 })(window);
