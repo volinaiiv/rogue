@@ -7,6 +7,10 @@
         this.y = y;
     }
 
+    /**
+     * Возвращает CSS-класс для отображения объекта
+     * @return {string} CSS-класс
+     */
     Prop.prototype.getCssClass = function () {
         return this.type.css;
     };

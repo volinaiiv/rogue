@@ -1,6 +1,11 @@
 (function () {
     "use strict";
 
+    /**
+     * Загружает скрипты последовательно и вызывает колбэк по завершении
+     * @param {string[]} files массив путей к скриптам
+     * @param {Function} done колбэк после загрузки всех скриптов
+     */
     function loadScriptsInOrder(files, done) {
         let i = 0;
         function next() {

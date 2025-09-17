@@ -11,10 +11,21 @@
         this.attackDamage = damage;
     }
 
+    /**
+     * CSS-класс для отображения игрока
+     * @returns {string}
+     */
     Player.prototype.getCssClass = function () {
         return "tileP";
     };
 
+    /**
+     * Двигает игрока по карте и обрабатывает предметы
+     * @param {GameMap} map карта
+     * @param {number} dx смещение по X
+     * @param {number} dy смещение по Y
+     * @returns {boolean} успешно ли переместился
+     */
     Player.prototype.move = function (map, dx, dy) {
         const nx = this.x + dx;
         const ny = this.y + dy;
@@ -38,6 +49,11 @@
         return true;
     };
 
+    /**
+     * Атака по соседним клеткам
+     * @param {GameMap} map карта
+     * @returns {boolean} был ли нанесён удар
+     */
     Player.prototype.attack = function (map) {
         const dirs = [
             { dx: 1, dy: 0 },
@@ -65,6 +81,11 @@
         return hitSomeone;
     };
 
+    /**
+     * Получение урона
+     * @param {number} amount величина урона
+     * @returns {number} текущее здоровье
+     */
     Player.prototype.takeDamage = function (amount) {
         this.health = Math.max(0, this.health - amount);
         return this.health;

@@ -9,15 +9,29 @@
         this.attackDamage = damage;
     }
 
+    /**
+     * Получить CSS-класс врага
+     * @return {string} название CSS-класса
+     */
     Enemy.prototype.getCssClass = function () {
         return "tileE";
     };
 
+    /**
+     * Получить урон
+     * @param {number} amount величина урона
+     * @return {number} оставшееся здоровье
+     */
     Enemy.prototype.takeDamage = function (amount) {
         this.health = Math.max(0, this.health - amount);
         return this.health;
     };
 
+    /**
+     * Попытка атаковать игрока
+     * @param {GameMap} map игровая карта
+     * @return {boolean} true если атака совершена
+     */
     Enemy.prototype.tryAttack = function (map) {
         if (!map.player) return false;
         const dx = Math.abs(this.x - map.player.x);
@@ -29,6 +43,11 @@
         return false;
     };
 
+    /**
+     * Попытка случайного перемещения
+     * @param {GameMap} map игровая карта
+     * @return {boolean} true если враг переместился
+     */
     Enemy.prototype.tryMoveRandom = function (map) {
         const dirs = [
             { dx: 1, dy: 0 },

@@ -10,6 +10,9 @@
         this._onKeyDown = null;
     }
 
+    /**
+     * Инициализация игры
+     */
     Game.prototype.init = function () {
         this.fieldElement = document.querySelector('.field');
 
@@ -21,6 +24,12 @@
         this.render();
     };
 
+    /**
+     * Вычисляет размер тайла и подгоняет поле
+     * @param {number} width ширина карты в клетках
+     * @param {number} height высота карты в клетках
+     * @return {number} размер одного тайла (px)
+     */
     Game.prototype.calculateTileSize = function (width, height) {
         const field = this.fieldElement;
         const tileWidth = Math.floor(field.clientWidth / width);
@@ -31,11 +40,21 @@
         return tile;
     };
 
+    /**
+     * Полностью очищает DOM-узлы поля
+     */
     Game.prototype.clearField = function () {
         const field = this.fieldElement;
         while (field.firstChild) field.removeChild(field.firstChild);
     };
 
+    /**
+     * Создаёт DOM-элемент тайла
+     * @param {number} x координата X в клетках
+     * @param {number} y координата Y в клетках
+     * @param {string} cssClass CSS-класс для визуализации
+     * @return {HTMLDivElement} DOM-элемент тайла
+     */
     Game.prototype.createTileNode = function (x, y, cssClass) {
         const node = document.createElement('div');
         node.classList.add('tile');
@@ -48,6 +67,10 @@
         return node;
     };
 
+    /**
+     * Отрисовка сетки (пол и стены)
+     * @param {function(number,number):string} getCssClassAt функция для получения CSS-класса по координатам
+     */
     Game.prototype.renderGridLayer = function (getCssClassAt) {
         const frag = document.createDocumentFragment();
         for (let y = 0; y < this.map.height; y++) {
@@ -60,6 +83,10 @@
         this.fieldElement.appendChild(frag);
     };
 
+    /**
+     * Отрисовка объектов (игрок, враги, предметы)
+     * @param {Array<Object>} list список объектов для рендера
+     */
     Game.prototype.renderSpriteLayer = function (list) {
         if (!list || !list.length) return;
         const frag = document.createDocumentFragment();
@@ -78,6 +105,9 @@
         this.fieldElement.appendChild(frag);
     };
 
+    /**
+     * Логика действий врагов после хода игрока
+     */
     Game.prototype.enemiesAct = function () {
         for (let i = 0; i < this.map.enemies.length; i++) {
             const e = this.map.enemies[i];
@@ -89,6 +119,9 @@
         }
     };
 
+    /**
+     * Перерисовывает всё поле
+     */
     Game.prototype.render = function () {
         this.clearField();
 
@@ -100,12 +133,19 @@
         }
     };
 
+    /**
+     * Подключает обработку ввода с клавиатуры
+     */
     Game.prototype.bindControls = function () {
         if (this._onKeyDown) return;
         this._onKeyDown = this.onKeyDown.bind(this);
         window.addEventListener('keydown', this._onKeyDown);
     };
 
+    /**
+     * Обработка нажатия клавиш
+     * @param {KeyboardEvent} e событие клавиатуры
+     */
     Game.prototype.onKeyDown = function (e) {
         if (!this.map.player) return;
         let dx = 0, dy = 0;

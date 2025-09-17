@@ -16,6 +16,9 @@
         this.enemies = [];
     }
 
+    /**
+     * Инициализация: заполнение стенами, очистка сущностей
+     */
     GameMap.prototype.init = function () {
         let y, x;
         this.tiles = new Array(this.height);
@@ -32,14 +35,32 @@
         this.enemies = [];
     };
 
+    /**
+     * Проверка границ карты
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {boolean} true если внутри карты
+     */
     GameMap.prototype.inBounds = function (x, y) {
         return x >= 0 && y >= 0 && x < this.width && y < this.height;
     };
 
+    /**
+     * Проверка клетки на пол
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {boolean} true если клетка — пол
+     */
     GameMap.prototype.isFloor = function (x, y) {
         return this.inBounds(x, y) && this.tiles[y][x].type === PropType.floor;
     };
 
+    /**
+     * Получить предмет на клетке
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {Prop|null} предмет или null
+     */
     GameMap.prototype.itemAt = function (x, y) {
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].x === x && this.items[i].y === y) return this.items[i];
@@ -47,6 +68,12 @@
         return null;
     };
 
+    /**
+     * Получить врага на клетке
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {Enemy|null} враг или null
+     */
     GameMap.prototype.enemyAt = function (x, y) {
         for (let i = 0; i < this.enemies.length; i++) {
             if (this.enemies[i].x === x && this.enemies[i].y === y) return this.enemies[i];
@@ -54,6 +81,12 @@
         return null;
     };
 
+    /**
+     * Проверка занятости клетки
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {boolean} true если клетка занята
+     */
     GameMap.prototype.isOccupied = function (x, y) {
         if (this.itemAt(x, y)) return true;
         else if (this.enemyAt(x, y)) return true;
@@ -61,6 +94,13 @@
         return false;
     };
 
+    /**
+     * Проверка, можно ли пройти
+     * @param {GameMap} map карта
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {boolean} true если можно ходить
+     */
     GameMap.prototype.canMoveTo = function (map, x, y) {
         if (!map.inBounds(x, y)) return false;
         else if (!map.isFloor(x, y)) return false;
@@ -69,6 +109,13 @@
         return true;
     };
 
+    /**
+     * Вырезать прямоугольник пола
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @param {number} w ширина
+     * @param {number} h высота
+     */
     GameMap.prototype.carveRect = function (x, y, w, h) {
         for (let j = y; j < y + h; j++) {
             for (let i = x; i < x + w; i++) {
@@ -79,6 +126,10 @@
         }
     };
 
+    /**
+     * Найти пустую клетку пола
+     * @return {{x:number,y:number}|null} координаты клетки или null
+     */
     GameMap.prototype.findEmptyFloorCell = function () {
         const total = this.width * this.height;
         const start = randomInt(0, total - 1);
@@ -93,6 +144,10 @@
         return null;
     };
 
+    /**
+     * Разместить коридоры
+     * @return {void}
+     */
     GameMap.prototype.placeCorridors = function () {
         const hCount = randomInt(cfg.corridors.horizontalMin, cfg.corridors.horizontalMax);
         const vCount = randomInt(cfg.corridors.verticalMin, cfg.corridors.verticalMax);
@@ -113,6 +168,11 @@
         }
     };
 
+    /**
+     * Проверка касания комнаты с полом
+     * @param {{x:number,y:number,w:number,h:number}} room объект комнаты
+     * @return {boolean} true если комната касается пола
+     */
     GameMap.prototype.roomTouchesFloor = function (room) {
         for (let j = room.y; j < room.y + room.h; j++) {
             for (let i = room.x; i < room.x + room.w; i++) {
@@ -123,6 +183,9 @@
         return false;
     };
 
+    /**
+     * Разместить комнаты
+     */
     GameMap.prototype.placeRooms = function () {
         const targetCount = randomInt(cfg.room.countMin, cfg.room.countMax);
 
@@ -155,7 +218,9 @@
         }
     };
 
-
+    /**
+     * Разместить предметы
+     */
     GameMap.prototype.placeItems = function () {
         for (let i = 0; i < cfg.items.swords; i++) {
             const cell = this.findEmptyFloorCell();
@@ -170,6 +235,9 @@
         }
     };
 
+    /**
+     * Разместить игрока
+     */
     GameMap.prototype.placePlayer = function () {
         const cell = this.findEmptyFloorCell();
         if (cell) {
@@ -177,6 +245,9 @@
         }
     };
 
+    /**
+     * Разместить врагов
+     */
     GameMap.prototype.placeEnemies = function () {
         this.enemies = [];
         const count = cfg.enemies;
@@ -187,6 +258,12 @@
         }
     };
 
+    /**
+     * Удалить врагов с клетки
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {number} количество удалённых врагов
+     */
     GameMap.prototype.removeEnemiesAt = function (x, y) {
         let removed = 0;
         for (let i = this.enemies.length - 1; i >= 0; i--) {
@@ -198,6 +275,12 @@
         return removed;
     };
 
+    /**
+     * Удалить предмет с клетки
+     * @param {number} x координата X
+     * @param {number} y координата Y
+     * @return {Prop|null} удалённый предмет или null
+     */
     GameMap.prototype.removeItemAt = function (x, y) {
         for (let i = 0; i < this.items.length; i++) {
             if (this.items[i].x === x && this.items[i].y === y) {
@@ -207,6 +290,10 @@
         return null;
     };
 
+    /**
+     * Генерация карты
+     * @return {void}
+     */
     GameMap.prototype.generate = function () {
         this.init();
         this.placeCorridors();
