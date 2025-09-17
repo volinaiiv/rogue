@@ -62,7 +62,11 @@
     };
 
     GameMap.prototype.canMoveTo = function (map, x, y) {
-        return map.inBounds(x, y) && map.isFloor(x, y) && !map.enemyAt(x, y);
+        if (!map.inBounds(x, y)) return false;
+        else if (!map.isFloor(x, y)) return false;
+        else if (map.enemyAt(x, y)) return false;
+        else if (map.player && map.player.x === x && map.player.y === y) return false;
+        return true;
     };
 
     GameMap.prototype.carveRect = function (x, y, w, h) {
@@ -109,6 +113,16 @@
         }
     };
 
+    GameMap.prototype.roomTouchesFloor = function (room) {
+        for (let j = room.y; j < room.y + room.h; j++) {
+            for (let i = room.x; i < room.x + room.w; i++) {
+                if (!this.inBounds(i, j)) continue;
+                if (this.tiles[j][i].type === PropType.floor) return true;
+            }
+        }
+        return false;
+    };
+
     GameMap.prototype.placeRooms = function () {
         const targetCount = randomInt(cfg.room.countMin, cfg.room.countMax);
 
@@ -134,10 +148,13 @@
             }
             if (overlaps) continue;
 
+            if (!this.roomTouchesFloor(room)) continue;
+
             this.carveRect(room.x, room.y, room.w, room.h);
             this.rooms.push(room);
         }
     };
+
 
     GameMap.prototype.placeItems = function () {
         for (let i = 0; i < cfg.items.swords; i++) {
