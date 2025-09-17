@@ -17,6 +17,7 @@
     document.addEventListener('DOMContentLoaded', function () {
         loadScriptsInOrder([
             'js/gameConfig.js',
+            'js/GameMap.js',
             'js/Game.js'
         ], function () {
             var game = new Game();

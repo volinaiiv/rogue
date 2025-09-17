@@ -12,6 +12,9 @@
     Game.prototype.init = function () {
         this.fieldElement = document.querySelector('.field');
 
+        this.map = new root.GameMap(cfg.mapWidth, cfg.mapHeight);
+        this.map.generate();
+
         this.tileSize = this.calculateTileSize(cfg.mapWidth, cfg.mapHeight);
 
         this.render();
