@@ -32,14 +32,16 @@
 
     Game.prototype.render = function () {
         const field = this.fieldElement;
-        let y, x, tile;
+        while (field.firstChild) {
+            field.removeChild(field.firstChild);
+        }
 
-        while (field.firstChild) { field.removeChild(field.firstChild); }
-
-        for (y = 0; y < this.map.height; y++) {
-            for (x = 0; x < this.map.width; x++) {
-                tile = document.createElement('div');
-                tile.className = 'tile tileW';
+        for (let y = 0; y < this.map.height; y++) {
+            for (let x = 0; x < this.map.width; x++) {
+                const prop = this.map.tiles[y][x];
+                const tile = document.createElement('div');
+                tile.classList.add('tile');
+                tile.classList.add(prop.getCssClass());
                 tile.style.width = this.tileSize + 'px';
                 tile.style.height = this.tileSize + 'px';
                 tile.style.left = (x * this.tileSize) + 'px';

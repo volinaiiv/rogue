@@ -17,8 +17,11 @@
     document.addEventListener('DOMContentLoaded', function () {
         loadScriptsInOrder([
             'js/gameConfig.js',
-            'js/GameMap.js',
-            'js/Game.js'
+            'js/enums/PropType.js',
+            'js/entities/Prop.js',
+            'js/utils/utils.js',
+            'js/core/GameMap.js',
+            'js/core/Game.js'
         ], function () {
             var game = new Game();
             game.init();
