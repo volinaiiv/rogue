@@ -7,6 +7,7 @@
         this.fieldElement = null;
         this.map = null;
         this.tileSize = 0;
+        this._onKeyDown = null;
     }
 
     Game.prototype.init = function () {
@@ -16,7 +17,7 @@
         this.map.generate();
 
         this.tileSize = this.calculateTileSize(cfg.mapWidth, cfg.mapHeight);
-
+        this.bindControls();
         this.render();
     };
 
@@ -79,6 +80,26 @@
         if (this.map.player) {
             this.renderSpriteLayer([this.map.player]);
         }
+    };
+
+    Game.prototype.bindControls = function () {
+        if (this._onKeyDown) return;
+        this._onKeyDown = this.onKeyDown.bind(this);
+        window.addEventListener('keydown', this._onKeyDown);
+    };
+
+    Game.prototype.onKeyDown = function (e) {
+        if (!this.map.player) return;
+        let dx = 0, dy = 0;
+        switch (e.code) {
+            case 'KeyW': dy = -1; break;
+            case 'KeyA': dx = -1; break;
+            case 'KeyS': dy = 1;  break;
+            case 'KeyD': dx = 1;  break;
+            default: return;
+        }
+        const moved = this.map.player.move(this.map, dx, dy);
+        if (moved) this.render();
     };
 
     root.Game = Game;

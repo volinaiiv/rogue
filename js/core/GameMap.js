@@ -55,10 +55,14 @@
     };
 
     GameMap.prototype.isOccupied = function (x, y) {
-        return (this.itemAt(x, y) ||
-            this.enemyAt(x, y) ||
+        return (this.itemAt(x, y) &&
+            this.enemyAt(x, y) &&
             (this.player && this.player.x === x && this.player.y === y)
         );
+    };
+
+    GameMap.prototype.canMoveTo = function (map, x, y) {
+        return map.inBounds(x, y) && map.isFloor(x, y) && !map.enemyAt(x, y);
     };
 
     GameMap.prototype.carveRect = function (x, y, w, h) {
