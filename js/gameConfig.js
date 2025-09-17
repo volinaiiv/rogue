@@ -20,5 +20,12 @@
             potions: 10, // зелья
         },
         enemies: 10, // количество врагов
+        player: {
+            maxHealth: 100
+        },
+        enemy: {
+            maxHealth: 100,
+            attackDamage: 10
+        }
     };
 })(window);

@@ -66,9 +66,22 @@
         for (let i = 0; i < list.length; i++) {
             const obj = list[i];
             const node = this.createTileNode(obj.x, obj.y, obj.getCssClass());
+            if (typeof obj.health === 'number' && typeof obj.maxHealth === 'number' && obj.maxHealth > 0) {
+                const bar = document.createElement('div');
+                bar.className = 'health';
+                const pct = Math.max(0, Math.min(100, Math.round((obj.health / obj.maxHealth) * 100)));
+                bar.style.width = pct + '%';
+                node.appendChild(bar);
+            }
             frag.appendChild(node);
         }
         this.fieldElement.appendChild(frag);
+    };
+
+    Game.prototype.enemiesAct = function () {
+        for (let i = 0; i < this.map.enemies.length; i++) {
+            this.map.enemies[i].tryAttack(this.map, cfg.enemy.attackDamage);
+        }
     };
 
     Game.prototype.render = function () {
@@ -103,7 +116,10 @@
             default: return;
         }
         const moved = this.map.player.move(this.map, dx, dy);
-        if (moved) this.render();
+        if (moved) {
+            this.enemiesAct();
+            this.render();
+        }
     };
 
     root.Game = Game;

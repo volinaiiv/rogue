@@ -55,9 +55,10 @@
     };
 
     GameMap.prototype.isOccupied = function (x, y) {
-        return this.itemAt(x, y) &&
-            this.enemyAt(x, y) &&
-            (this.player && this.player.x === x && this.player.y === y);
+        if (this.itemAt(x, y)) return true;
+        else if (this.enemyAt(x, y)) return true;
+        else if (this.player && this.player.x === x && this.player.y === y) return true;
+        return false;
     };
 
     GameMap.prototype.canMoveTo = function (map, x, y) {
@@ -155,7 +156,7 @@
     GameMap.prototype.placePlayer = function () {
         const cell = this.findEmptyFloorCell();
         if (cell) {
-            this.player = new Player(cell.x, cell.y);
+            this.player = new Player(cell.x, cell.y, cfg.player.maxHealth);
         }
     };
 
@@ -165,7 +166,7 @@
         for (let i = 0; i < count; i++) {
             const cell = this.findEmptyFloorCell();
             if (!cell) break;
-            this.enemies.push(new Enemy(cell.x, cell.y));
+            this.enemies.push(new Enemy(cell.x, cell.y, cfg.enemy.maxHealth));
         }
     };
 

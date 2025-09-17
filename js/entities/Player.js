@@ -1,9 +1,11 @@
 (function (root) {
     "use strict";
 
-    function Player(x, y) {
+    function Player(x, y, maxHealth) {
         this.x = x;
         this.y = y;
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
     }
 
     Player.prototype.getCssClass = function () {
@@ -35,6 +37,11 @@
             totalRemoved += map.removeEnemiesAt(nx, ny);
         }
         return totalRemoved > 0;
+    };
+
+    Player.prototype.takeDamage = function (amount) {
+        this.health = Math.max(0, this.health - amount);
+        return this.health;
     };
 
     root.Player = Player;
