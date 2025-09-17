@@ -12,6 +12,7 @@
         this.tiles = [];
         this.rooms = [];
         this.items = [];
+        this.player = null;
     }
 
     GameMap.prototype.init = function () {
@@ -26,6 +27,7 @@
 
         this.rooms = [];
         this.items = [];
+        this.player = null;
     };
 
     GameMap.prototype.inBounds = function (x, y) {
@@ -131,11 +133,19 @@
         }
     };
 
+    GameMap.prototype.placePlayer = function () {
+        const cell = this.findEmptyFloorCell();
+        if (cell) {
+            this.player = new Player(cell.x, cell.y);
+        }
+    };
+
     GameMap.prototype.generate = function () {
         this.init();
         this.placeCorridors();
         this.placeRooms();
         this.placeItems();
+        this.placePlayer();
     };
 
     root.GameMap = GameMap;
