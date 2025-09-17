@@ -96,6 +96,10 @@
             case 'KeyA': dx = -1; break;
             case 'KeyS': dy = 1;  break;
             case 'KeyD': dx = 1;  break;
+            case 'Space':
+                e.preventDefault();
+                if (this.map.player.attack(this.map)) this.render();
+                return;
             default: return;
         }
         const moved = this.map.player.move(this.map, dx, dy);

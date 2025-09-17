@@ -19,5 +19,23 @@
         return true;
     };
 
+    Player.prototype.attack = function (map) {
+        const dirs = [
+            { dx: 1, dy: 0 },
+            { dx: -1, dy: 0 },
+            { dx: 0, dy: 1 },
+            { dx: 0, dy: -1 }
+        ];
+
+        let totalRemoved = 0;
+        for (let i = 0; i < dirs.length; i++) {
+            const nx = this.x + dirs[i].dx;
+            const ny = this.y + dirs[i].dy;
+            if (!map.inBounds(nx, ny)) continue;
+            totalRemoved += map.removeEnemiesAt(nx, ny);
+        }
+        return totalRemoved > 0;
+    };
+
     root.Player = Player;
 })(window);
